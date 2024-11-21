@@ -1,0 +1,29 @@
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: instabytes-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: username
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+    networks:
+      - instabytes-network
+    labels:
+      - "instabytes-mongo"
+
+volumes:
+  mongo-data:
+
+networks:
+  instabytes-network:
+    driver: bridge
