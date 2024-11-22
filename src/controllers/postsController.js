@@ -1,3 +1,4 @@
+import fs from "fs";
 import { listAllPosts, insertPost } from "../models/postsModel.js";
 
 export async function getAll(request, response) {
@@ -24,9 +25,27 @@ export async function postPost(request, response) {
 }
 
 export async function imageUploader(request, response) {
-    if (!request.file) {
-        return response.status(400).json({ error: "Invalid file" });
+    if (!request.file.originalname) {
+        console.error(request.file.originalname);
+        return response.status(400).json({ error: "Invalid data" });
     }
+    
+    const newPost = {
+        description: "",
+        image: {
+            url: request.file.originalname,
+            alt: ""
+        }
+    };
 
-    response.status(201).json({ filename: request.file.filename });
+    try {
+        const createdPost = await insertPost(newPost);
+        console.log(createdPost);
+        const udatedImage = `uploads/${createdPost.insertedId}.jpg`;
+        fs.renameSync(request.file.path, udatedImage);
+        response.status(201).json(createdPost);
+    } catch (error) {
+        console.error(error.message);
+        response.status(500).send("<html><img src='https://http.dog/500.jpg'></img></html>");
+    }
 }
