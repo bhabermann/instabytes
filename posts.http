@@ -1,0 +1,22 @@
+@base = http://localhost:3000
+
+### GET /posts
+
+GET {{base}}/posts
+
+### GET /posts/:id
+
+GET {{base}}/posts/673e7685ccb350b7cc492065
+
+### POST /posts
+
+POST {{base}}/posts
+Content-Type: application/json
+
+{
+    "description": "Gato de exemplo",
+    "image": {
+        "url": "https://http.cat/101.jpg",
+        "alt": "Cat representing HTTP 101 code"
+    }
+}
