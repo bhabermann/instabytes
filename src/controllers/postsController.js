@@ -1,5 +1,5 @@
 import fs from "fs";
-import { listAllPosts, insertPost } from "../models/postsModel.js";
+import { listAllPosts, insertPost, updatePost } from "../models/postsModel.js";
 
 export async function getAll(request, response) {
     const posts = await listAllPosts();
@@ -44,6 +44,26 @@ export async function imageUploader(request, response) {
         const udatedImage = `uploads/${createdPost.insertedId}.jpg`;
         fs.renameSync(request.file.path, udatedImage);
         response.status(201).json(createdPost);
+    } catch (error) {
+        console.error(error.message);
+        response.status(500).send("<html><img src='https://http.dog/500.jpg'></img></html>");
+    }
+}
+
+export async function putPost(request, response) {
+    const postId = request.params.id;
+    const imageUrl = `http://localhost:3000/${postId}.jpg`;
+    const updatedPost = {
+        description: request.body.description,
+        image: {
+            url: imageUrl,
+            alt: request.body.alt
+        }
+    };
+
+    try {
+        const result = await updatePost(postId, updatedPost);
+        response.status(201).json(result);
     } catch (error) {
         console.error(error.message);
         response.status(500).send("<html><img src='https://http.dog/500.jpg'></img></html>");

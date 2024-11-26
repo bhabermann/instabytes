@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import connect from '../config/databaseConfig.js';
 
 const connection = await connect(process.env.CONNECTION_STRING);
@@ -10,4 +11,9 @@ export async function listAllPosts() {
 
 export async function insertPost(post) {
     return collection.insertOne(post);
+}
+
+export async function updatePost(id, post) {
+    const objectId = ObjectId.createFromHexString(id);
+    return collection.updateOne({_id: new ObjectId(objectId)}, {$set: post});
 }
