@@ -1,5 +1,5 @@
 import fs from "fs";
-import { listAllPosts, insertPost, updatePost } from "../models/postsModel.js";
+import { listAllPosts, insertPost, updatePost, removePost } from "../models/postsModel.js";
 import gerarDescricaoComGemini from '../services/geminiService.js';
 
 export async function getAll(request, response) {
@@ -69,6 +69,23 @@ export async function putPost(request, response) {
 
         const result = await updatePost(postId, updatedPost);
         response.status(200).json(result);
+    } catch (error) {
+        console.error(error.message);
+        response.status(500).send("<html><img src='https://http.dog/500.jpg'></img></html>");
+    }
+}
+
+export async function deletePost(request, response) {
+    const postId = request.params.id;
+
+    try {
+        await removePost(postId);
+
+        if (fs.existsSync(`uploads/${postId}.jpg`)){
+            fs.rmSync(`uploads/${postId}.jpg`);
+        }
+
+        response.status(204).send();
     } catch (error) {
         console.error(error.message);
         response.status(500).send("<html><img src='https://http.dog/500.jpg'></img></html>");

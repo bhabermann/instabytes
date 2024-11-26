@@ -17,3 +17,8 @@ export async function updatePost(id, post) {
     const objectId = ObjectId.createFromHexString(id);
     return collection.updateOne({_id: new ObjectId(objectId)}, {$set: post});
 }
+
+export async function removePost(id) {
+    const objectId = ObjectId.createFromHexString(id);
+    return collection.deleteOne({_id: new ObjectId(objectId)});
+}

@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
-import { getAll, postPost, imageUploader, putPost } from '../controllers/postsController.js';
+import { getAll, postPost, imageUploader, putPost, deletePost } from '../controllers/postsController.js';
 
 const corsOptions = {
     origin: 'http://localhost:8000',
@@ -31,6 +31,8 @@ const routes = (app) => {
     app.post("/upload", upload.single('image'), imageUploader);
 
     app.put("/posts/:id", putPost);
+
+    app.delete("/posts/:id", deletePost);
 }
 
 export default routes;
